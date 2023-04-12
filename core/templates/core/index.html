@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+    <section class="row">
+        <div class="col-md-8">
+            {% for post in page_obj %}
+            <div class="card mb-4">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-0">{{post.category}}</h6>
+                  <small class="text-muted ">{{post.created_at}}</small>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-outline-secondary btn-sm"><i class="bi bi-heart"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">{{post.content| safe |striptags|truncatechars:100}}</p>
+                <a href="{% url 'posts:post' slug=post.slug%}"><button type="button" class="btn btn-primary">Read More</button></a>
+              </div>
+              
+            </div>
+            
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1"> <button type="button" class="btn btn-secondary">&laquo; first</button></a>
+                        <a href="?page={{ page_obj.previous_page_number }}"> <button type="button" class="btn btn-secondary">&lsaquo; previous</button></a>
+                    {% endif %}
+
+                    <span class="current-page"> <button type="button" class="btn btn-secondary">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </button></span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}"> <button type="button" class="btn btn-secondary">next &rsaquo;</button></a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}"> <button type="button" class="btn btn-secondary">last &raquo;</button></a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        {% if request.user.is_authenticated %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-dark border-bottom">
+                    <h5 class="card-title m-0">Followed Profiles</h5>
+                </div>
+                <div class="card-body">
+                    {% for profile in followed_profiles %}
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ profile.profile_image.url }}" alt="{{ profile.user.username }}" width="50" height="50" class="rounded-circle me-2">
+                            <div>
+                                <a href="{% url 'accounts:profile' %}{{profile.username}}"><h6 class="mb-0">{{ profile.user.username }}</h6></a>
+                                <small>{{ profile.followers.count }} followers</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card mb-3">
+              <div class="card-header bg-dark border-bottom">
+                  <h5 class="card-title m-0">Categories</h5>
+              </div>
+              <div class="card-body">
+                  {% for category in categories %}
+                      <div class="d-flex align-items-center mb-3">
+                          <div>
+                              <a href="#"><h6 class="mb-0"></h6></a>
+                              <a href="{% url "posts:feed" slug=category.slug%}"><small>{{category}}</small></a>
+                          </div>
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
+        </div>
+        
+        {% endif %}
+    </section>
+  
+{% endblock %}
