@@ -1,0 +1,93 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <section class="row">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header bg-dark border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title m-0">{{ post.title }}</h5>
+                        <small>Posted by <a href="#">{{ post.created_by}}</a></small>
+                    </div>
+                    <small class="text-muted">{{ post.category.name }}</small>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ post.content|safe }}</p>
+                </div>
+                <div class="card-footer bg-dark border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <form method="post" action="{% url 'posts:like' slug=post.slug%}">  
+                      <div>
+                        <button type="submit" class="btn btn-primary btn-sm">
+                          <i class="fas fa-thumbs-up"></i>
+                          Like
+                          <span class="mx-1">{{ post.liked_by.count }}</span>
+                      </button>
+                        </div>
+                     
+                      </form>
+                      {% if post.created_by == request.user.username %}
+                      <form  method="post" >
+                        {% csrf_token %}  
+                        <div>
+                          <button  name="delete" type="submit" class="btn btn-sm btn-danger">
+                            <i class="fas fa-thumbs-up"></i>
+                            Delete post
+                            
+                        </button>
+                          </div>
+                        </form>
+                        <a href="{% url 'accounts:edit' slug=post.slug%}">  
+                          <div>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                              <i class="fas fa-thumbs-up"></i>
+                              Edit post
+                             
+                          </button>
+                            </div>
+                          </a>
+                        {% endif %}
+                        <div>
+                            <small>{{ post.created_at|date:'F d, Y' }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-dark border-bottom">
+                    <h5 class="card-title m-0">About the author</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ author.profile_image.url }}" alt="{{ author.username }}" width="50" height="50" class="rounded-circle me-2">
+                        <div>
+                            <a href="/profile/{{author.username}}"><h6 class="mb-0">{{ author.username }}</h6></a>
+                            <small>{{ author.followers.count }} followers</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+              <div class="card-header bg-dark border-bottom">
+                  <h5 class="card-title m-0">Categories</h5>
+              </div>
+              <div class="card-body">
+                  {% for category in categories %}
+                      <div class="d-flex align-items-center mb-3">
+                          <div>
+                              <a href="#"><h6 class="mb-0"></h6></a>
+                              <a href="{% url "posts:feed" slug=category.slug%}"><small>{{category}}</small></a>
+                          </div>
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
+        </div>
+        
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
