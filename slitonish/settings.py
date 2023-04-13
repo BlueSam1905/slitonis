@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-%p9yd&b!kbqecay7t&y@g__va5qojculoa$i8&zj)ijswee3al
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['*']
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = "/profile"
 LOGOUT_REDIRECT_URL = '/'
@@ -36,7 +36,7 @@ LOGOUT_REDIRECT_URL = '/'
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'storages',
-    'cloudinary_storage',
+    'cloudinary'
+    
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -67,7 +68,6 @@ CKEDITOR_CONFIGS = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -168,15 +168,7 @@ CLOUDINARY_STORAGE = {
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_DIRS = [
-
-    os.path.join(BASE_DIR, "static")
-
-]
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 
 
